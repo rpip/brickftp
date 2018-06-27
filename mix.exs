@@ -31,12 +31,13 @@ defmodule BrickFTP.MixProject do
     [
       {:httpoison, "~> 0.11"},
       {:poison, "~> 2.2 or ~> 3.0"},
-      # Test
 
+      {:dialyxir, "~> 0.5", only: :dev, runtime: false},
+      # Test
       # Docs
-      {:ex_doc, "~> 0.18.0", only: :dev},
-      {:earmark, "~> 1.2.0", only: :dev},
-      {:inch_ex, ">= 0.0.0", only: :dev}
+      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false},
+      {:earmark, "~> 1.2.0", only: :dev, runtime: false},
+      {:inch_ex, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 

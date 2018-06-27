@@ -178,7 +178,7 @@ defmodule BrickFTP do
   # set authentication cookie
   defp build_opts(opts) do
     case Keyword.has_key?(opts, :session) do
-      {nil,_} ->
+      false ->
         opts
       _ ->
         case Application.get_env(:brickftp, :session) do
