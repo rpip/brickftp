@@ -53,7 +53,8 @@ defmodule BrickFTP.FileOperation.Upload do
   end
 
   @doc """
-  Upload the file to the URL(s) provided by the REST API, possibly in parts via multiple uploads.
+  Upload the file to the URL(s) provided by the REST API, possibly in parts via
+  multiple uploads.
   """
   def run(path, data, chunk_size) do
     # if chunk_size,
@@ -88,6 +89,9 @@ defmodule BrickFTP.FileOperation.Upload do
   commit(path, firstref)
   end
 
+  @doc """
+  Upload the file to the URL provided by the REST API, in one go
+  """
   def run(path, data) do
     with {:ok, upload_info} <- at(path),
          {:ok, _} <- upload(upload_info['upload_uri'], data) do
