@@ -5,6 +5,7 @@ defmodule BrickFTP do
   @client_version Mix.Project.config()[:version]
   @useragent "BrickFTP/v1 brickftp-elixir/#{@client_version}"
 
+  @default_content_type "text/html"
   @accept_headers [
     json: "application/json",
     xml: "application/xml",
@@ -62,20 +63,24 @@ defmodule BrickFTP do
   ## private methods
 
   # For more details, see https://developers.brickftp.com/#request-and-response-format
-  defp content_type!(headers) do
-    {_, type} = List.keyfind(headers, "Content-Type", 0)
-    xs = @accept_headers
-    Enum.reduce(xs, %{}, fn {k, v}, acc -> Map.put(acc, v, k) end)
-    |> Map.get(type)
+  defp content_type(headers) do
+    case List.keyfind(headers, "Content-Type", 0) do
+      {_, type} ->
+        xs = @accept_headers
+        Enum.reduce(xs, %{}, fn {k, v}, acc -> Map.put(acc, v, k) end)
+        |> Map.get(type)
+      _ ->
+        @default_content_type
+    end
   end
 
   defp handle_response({:ok, %{body: body, status_code: code, headers: headers}})
   when code in [200, 201] do
-    {:ok, parse_response_body(body, content_type!(headers))}
+    {:ok, parse_response_body(body, content_type(headers))}
   end
 
   defp handle_response({:ok, %{body: body, status_code: code, headers: headers}}) do
-    response = body |> parse_response_body(content_type!(headers))
+    response = body |> parse_response_body(content_type(headers))
     message = Map.get(response, "error")
     errors = Map.get(response, "errors")
 
