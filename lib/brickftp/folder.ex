@@ -1,7 +1,7 @@
 defmodule BrickFTP.Folder do
 
   use BrickFTP.API, [:retrieve]
-  #use BrickFTP.FileOperation
+  use BrickFTP.FileOperation
 
   def endpoint do
     "folders"

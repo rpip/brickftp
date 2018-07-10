@@ -2,12 +2,14 @@ defmodule BrickFTP.InvalidRequestError do
   @moduledoc """
   Bad Request: often due to missing a required parameter
 
-  Also for when resource Not Found.
+  422, Unprocessable entity. The request could not be processed.
+
+  404 - Not found
   """
   defexception [
     type: "invalid_request_error",
     message: nil,
-    code: nil,
+    code: 400,
     errors: nil
   ]
 end

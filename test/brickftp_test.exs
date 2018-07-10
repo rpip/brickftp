@@ -1,8 +1,5 @@
-defmodule BrickftpTest do
+defmodule BrickFTPTest do
   use ExUnit.Case
-  doctest Brickftp
+  doctest BrickFTP
 
-  test "greets the world" do
-    assert Brickftp.hello() == :world
-  end
 end

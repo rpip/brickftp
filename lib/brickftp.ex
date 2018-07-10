@@ -76,19 +76,19 @@ defmodule BrickFTP do
 
   defp handle_response({:ok, %{body: body, status_code: code, headers: headers}}) do
     response = body |> parse_response_body(content_type!(headers))
-    message = Map.fetch(response, "error")
-    errors = Map.fetch(response, "errors")
+    message = Map.get(response, "error")
+    errors = Map.get(response, "errors")
 
     error_struct =
       case code do
         code when code in [400, 422, 404] ->
-          %InvalidRequestError{errors: errors}
+          %InvalidRequestError{errors: errors, code: code}
         401 ->
           %AuthenticationError{errors: errors}
         403 ->
-          %PermissionError{}
+          %PermissionError{message: message}
         _ ->
-          %APIError{}
+          %APIError{message: message}
       end
 
     {:error, %{error_struct | code: code, message: message}}
