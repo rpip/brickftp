@@ -19,18 +19,11 @@ defmodule BrickFTP.Group do
   Adds a user to a group. By default, the member will not be an admin.
   If the user is already a member of the group, their attributes will
   be updated to match the request.
-  """
-  def add_member(group_id, user_id) do
-    request(:put, "#{endpoint()}/#{group_id}/memberships/#{user_id}", %{})
-  end
 
-  @doc """
   Last param indicates whether the user is an administrator of the group.
   """
-  def add_member(group_id, user_id, true) do
-    url = "#{endpoint()}/#{group_id}/memberships/#{user_id}"
-    params = [memberships: [admin: true]]
-    request(:put, url, params)
+  def add_member(group_id, user_id) do
+    request(:put, "#{endpoint()}/#{group_id}/memberships/#{user_id}")
   end
 
   @doc """
@@ -39,12 +32,12 @@ defmodule BrickFTP.Group do
   """
   def update_member(group_id, user_id, is_admin) do
     url = "#{endpoint()}/#{group_id}/memberships/#{user_id}"
-    params = [memberships: [admin: is_admin]]
+    params = %{"memberships" => %{"admin" => is_admin}}
     request(:patch, url, params)
   end
 
   @doc "Removes a user from a group."
-  def delete_member(group_id, user_id) do
+  def remove_member(group_id, user_id) do
     request(:delete, "#{endpoint()}/#{group_id}/memberships/#{user_id}")
   end
 end
