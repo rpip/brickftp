@@ -34,7 +34,7 @@ defmodule BrickFTP.FileOperation do
 end
 
 defmodule BrickFTP.FileOperation.Upload do
-  import BrickFTP, only: [request: 3]
+  import BrickFTP, only: [request: 3, request: 4]
 
   def endpoint, do: "files"
 
@@ -43,19 +43,28 @@ defmodule BrickFTP.FileOperation.Upload do
   indicate intent to upload a file.
   """
   def at(path) do
-    request(:post, "#{endpoint()}/#{path}", [action: :put])
+    request(:post, "#{endpoint()}/#{path}", %{action: :put})
   end
 
   # Get uploading URL for multi part uploading.
   def at(path, part_number, ref) do
-    params = [action: :put, ref: ref, part: part_number]
+    params = %{action: :put, ref: ref, part: part_number}
     request(:post, "#{endpoint()}/#{path}", params)
+  end
+
+  defp to_chunks(data, chunk_size) do
+    data
+    |> Stream.unfold(&String.split_at(&1, chunk_size))
+    |> Enum.take_while(&(&1 != ""))
   end
 
   @doc """
   Upload the file to the URL(s) provided by the REST API, possibly in parts via
   multiple uploads.
+
+  data is binary
   """
+  # TODO(yao): support direct upload from IO devices. use streams
   def run(path, data, chunk_size) do
     # if chunk_size,
     # create chunks of data
@@ -63,9 +72,9 @@ defmodule BrickFTP.FileOperation.Upload do
     # for each upload_uri, upload chunk
     # commit
     {firstref, _lasttref} =
-      IO.stream(data, chunk_size)
-      |> Stream.with_index
-      |> Stream.map(fn {x, y} -> {x, y+1} end)
+      to_chunks(data, chunk_size)
+      |> Enum.with_index
+      |> Enum.map(fn {x, y} -> {x, y+1} end)
       |> Enum.reduce({nil, nil},
     fn {chunk, part}, {initial_ref, ref} ->
       if part > 2 do
@@ -94,7 +103,7 @@ defmodule BrickFTP.FileOperation.Upload do
   """
   def run(path, data) do
     with {:ok, upload_info} <- at(path),
-         {:ok, _} <- upload(upload_info['upload_uri'], data) do
+         {:ok, _} <- upload(upload_info["upload_uri"], data) do
 
       # end upload
       commit(path, upload_info["ref"])
@@ -103,11 +112,11 @@ defmodule BrickFTP.FileOperation.Upload do
 
   # Upload data
   defp upload(upload_uri, data) do
-    request(:put, upload_uri, data)
+    request(:put, upload_uri, data, [aws: true])
   end
 
   # Complete the upload by notifying the REST API that the file upload has completed.
   defp commit(path, ref) do
-    request(:post, "#{endpoint()}/#{path}", [action: :end, ref: ref])
+    request(:post, "#{endpoint()}/#{path}", %{action: :end, ref: ref})
   end
 end

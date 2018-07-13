@@ -1,5 +1,5 @@
 defmodule BrickFTP.UserTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   @username "doejohn#{:rand.uniform(100)}"
   @password "doejohn#{:rand.uniform(100)}"
@@ -29,10 +29,11 @@ defmodule BrickFTP.UserTest do
 
   test "update a user", %{user: user} do
     assert {:ok, _resp} = User.change_password(
-      to_string(user["id"]), @password, @new_change_password)
+      to_string(user["id"]), @username, @password, @new_change_password)
   end
 
   test "delete a user", %{user: user} do
-    assert {:ok, _resp} = User.delete_user(to_string(user["id"]), @password)
+    assert {:ok, _resp} = User.delete_user(
+      to_string(user["id"]), @username, @new_change_password)
   end
 end

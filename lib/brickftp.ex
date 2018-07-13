@@ -51,10 +51,26 @@ defmodule BrickFTP do
         |> handle_response
 
       action in [:post, :put, :patch] ->
-        data = Poison.encode!(data)
-
         # if binary, set content-length, don't encode binary data
-        # [{'Content-Length', byte_size(data)} | headers]
+        headers =
+          case is_binary(data) do
+            true ->
+              [{"Content-Length", byte_size(data)} | headers]
+            _ ->
+              headers
+          end
+
+        headers =
+            case Keyword.has_key?(opts, :aws) do
+              true ->
+                h = :proplists.delete("Authorization", headers)
+                [{"Content-Length", byte_size(data)} | h]
+              _ ->
+                headers
+            end
+
+        data = if Keyword.has_key?(opts, :aws), do: data, else: Poison.encode!(data)
+
         HTTPoison.request(action, request_url(endpoint), data, headers, build_opts(opts))
         |> handle_response
     end
@@ -126,6 +142,8 @@ defmodule BrickFTP do
   defp get_api_endpoint do
     "https://#{subdomain()}.brickftp.com/api/rest/v1/"
   end
+
+  defp request_url("http" <> _ = url), do: url
 
   defp request_url(endpoint) do
     Path.join(get_api_endpoint(), endpoint)

@@ -1,10 +1,13 @@
-defmodule BrickFTP.Folder do
-  use ExUnit.Case, async: true
+defmodule BrickFTP.FolderTest do
+  use ExUnit.Case, async: false
 
-  @path "Images"
-  @newpath "Images2"
+  alias BrickFTP.Folder
 
-  setup do
+  @path "foo"
+  @copypath "foo-copy"
+  @movepath "foo-move"
+
+  setup_all do
     assert {:ok, folder} = Folder.create(@path)
 
     {:ok, folder: folder}
@@ -23,15 +26,15 @@ defmodule BrickFTP.Folder do
   end
 
   test "copy a folder" do
-    assert {:ok, _} = Folder.copy(@path, @newpath)
+    assert {:ok, _} = Folder.copy(@path, @copypath)
   end
 
   test "move a folder" do
-    assert {:ok, _} = Folder.move(@path, @newpath)
+    assert {:ok, _} = Folder.move(@path, @movepath)
   end
 
   test "delete a folder" do
-    assert {:ok, _} = Folder.delete(@path)
-    assert {:ok, _} = Folder.delete(@newpath)
+    assert {:ok, _} = Folder.delete(@copypath)
+    assert {:ok, _} = Folder.delete(@movepath)
   end
 end

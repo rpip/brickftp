@@ -1,5 +1,5 @@
 defmodule BrickFTP.File do
-  use BrickFTP.API, [:create, :retrieve]
+  use BrickFTP.API, [:retrieve]
   use BrickFTP.FileOperation
 
   alias BrickFTP.FileOperation

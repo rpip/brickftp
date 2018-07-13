@@ -20,6 +20,7 @@ defmodule BrickFTP.Authentication do
     params = %{"username"=> username, "password"=> password}
     {:ok, %{"id"=> session}} = Session.create(params, [session: true])
     Application.put_env(:brickftp, :session, session)
+    session
   end
 
   @doc """
