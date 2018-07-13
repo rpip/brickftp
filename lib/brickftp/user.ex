@@ -1,5 +1,5 @@
 defmodule BrickFTP.User do
-  use BrickFTP.API, [:list, :retrieve, :create, :update, :delete]
+  use BrickFTP.API, [:list, :retrieve, :update]
 
   def endpoint do
     "users"
@@ -24,8 +24,12 @@ defmodule BrickFTP.User do
 
   For more details see https://developers.brickftp.com/#update-a-user
   """
-  def update_password(id, current_password, new_password) do
-    update(id, %{"password"=> new_password}, [reauth: current_password])
+  def change_password(id, current_password, new_password) do
+    params = %{
+      "password"=> new_password,
+      "require_password_change" => true
+    }
+    update(id, params, [reauth: current_password])
   end
 
   @doc """
@@ -34,8 +38,9 @@ defmodule BrickFTP.User do
    updating a password unless an API key is used
    For more details see https://developers.brickftp.com/#delete-a-user
   """
-  def delete_reauth(id, current_password) do
-    delete(id, %{}, [reauth: current_password])
+  def delete_user(id, current_password) do
+    resource_url = Path.join(endpoint(), id)
+    request(:delete, resource_url, %{}, [reauth: current_password])
   end
 
   @doc """

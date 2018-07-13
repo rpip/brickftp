@@ -29,12 +29,12 @@ defmodule BrickFTP.Bundle do
 
   For more details, see https://developers.brickftp.com/#download-one-file-in-a-bundle
   """
-  def download_bundle_file(code, password \\ nil,  path \\ nil) do
+  def download_file(code, password \\ nil,  path \\ nil) do
     params = [code: code, password: password, path: path]
     request(:post, "#{endpoint()}/download", clean_dict(params))
   end
 
-  def download_bundle_zip(code, password \\ nil) do
+  def download_zip(code, password \\ nil) do
     params = [code: code, password: password]
     request(:post, "#{endpoint()}/zip", clean_dict(params))
   end

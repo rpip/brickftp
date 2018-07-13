@@ -5,7 +5,8 @@ defmodule BrickFTP.GroupTest do
   alias BrickFTP.InvalidRequestError
 
   test "create/retrieve/update/delete an Group" do
-    name = "Accra Office 11"
+    num = :rand.uniform(10000000)
+    name = "Group #{num}"
     fixture = %{
       "name" => name,
       "user_ids"=> "3,7,9"
@@ -25,12 +26,7 @@ defmodule BrickFTP.GroupTest do
     update_params = %{"user_ids" => to_string(user["id"])}
     assert {:ok, _resp} = Group.update(to_string(id), update_params)
 
-    params = %{
-      "user" => %{
-    "username"=> "janesmith211",
-    "email"=> "janesmith211@example.com"
-   }}
-    assert {:ok, _resp} = Group.create_user_in_group(params, id)
+    assert {:ok, _resp} = Group.create_user_in_group(new_params(), id)
 
     # add a member
     user = Fixture.User.random_user()
@@ -41,5 +37,18 @@ defmodule BrickFTP.GroupTest do
 
     # remove member
     {:ok, _resp} = Group.remove_member(id, user["id"])
+
+    # delete group
+    {:ok, _} = Group.delete(to_string(group["id"]))
+  end
+
+  def new_params() do
+    num = :rand.uniform(10000000)
+    %{
+      "user" => %{
+        "username"=> "janesmith#{num}",
+        "email"=> "janesmith#{num}@example.com"
+      }
+    }
   end
 end

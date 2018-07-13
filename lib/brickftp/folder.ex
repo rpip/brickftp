@@ -23,7 +23,7 @@ defmodule BrickFTP.Folder do
   Returns the combined total number of files and subfolders in
   a given folder recursively.
   """
-  def count_contents(path) do
+  def count_contents_rs(path) do
     request(:get, "#{endpoint()}/#{path}", [action: :count])
   end
 
@@ -33,7 +33,7 @@ defmodule BrickFTP.Folder do
   Returns the number of files and folders, separately, located inside
   a given folder (non-recursively)
   """
-  def count_contents(path, true) do
+  def count_contents_nrs(path) do
     request(:get, "#{endpoint()}/#{path}", [action: :count_nrs])
   end
 

@@ -79,7 +79,7 @@ defmodule BrickFTP do
     {:ok, parse_response_body(body, content_type(headers))}
   end
 
-  defp handle_response({:ok, %{body: body, status_code: code, headers: headers}}) do
+  defp handle_response({:ok, %{body: body, status_code: code, headers: headers}} = _req) do
     response = body |> parse_response_body(content_type(headers))
     message = Map.get(response, "error")
     errors = Map.get(response, "errors")
