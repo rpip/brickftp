@@ -1,7 +1,7 @@
 defmodule BrickFTP.API do
   defmacro __using__(opts) do
     quote do
-      import BrickFTP, only: [request: 2, request: 3, request: 4]
+      import BrickFTP, only: [request: 2, request: 3, request: 4, with_session: 3]
 
       if :create in unquote(opts) do
         @doc """

@@ -55,13 +55,4 @@ defmodule BrickFTP.User do
   def unlock(user_id) do
     request(:post, "#{endpoint()}/#{user_id}/unlock")
   end
-
-  def with_session(username, password, callback) do
-    Authentication.login(username, password)
-    response = callback.()
-    Authentication.logout
-
-    # return response
-    response
-  end
 end

@@ -10,7 +10,7 @@ defmodule BrickFTP.APIKeyTest do
       "name"=> name,
       "permission_set"=> "full"
     }
-    user = Fixture.User.random_user()
+    user = Fixture.random_user()
 
     assert {:ok, %{"name" => name} = api_key} = APIKey.create(user["id"], fixture)
     assert {:ok, %{"id" => id}} = APIKey.retrieve(to_string(api_key["id"]))
@@ -19,7 +19,7 @@ defmodule BrickFTP.APIKeyTest do
   end
 
   test "list all API keys" do
-    user = Fixture.User.random_user()
+    user = Fixture.random_user()
 
     {:ok, resp} = APIKey.list(user["id"])
     assert is_list(resp)

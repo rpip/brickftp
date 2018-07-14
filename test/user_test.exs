@@ -1,16 +1,14 @@
 defmodule BrickFTP.UserTest do
   use ExUnit.Case, async: false
 
-  @username "doejohn#{:rand.uniform(100)}"
-  @password "doejohn#{:rand.uniform(100)}"
-  @new_change_password "doejohn#{:rand.uniform(100)}"
+  alias BrickFTP.{User, Fixture}
 
-  alias BrickFTP.User
+  @new_password "jdoe#{Fixture.random_num()}"
 
   setup_all do
-    assert {:ok, user} = User.create_user(@username, @password)
+    assert {user, password} = Fixture.new_user()
 
-    {:ok, user: user}
+    {:ok, user: user, password: password}
   end
 
   test "list/count/search/show user", %{user: user} do
@@ -27,13 +25,13 @@ defmodule BrickFTP.UserTest do
     assert {:ok, _resp} = User.unlock(user["id"])
   end
 
-  test "update a user", %{user: user} do
+  test "session required. update a user", %{user: user, password: password} do
     assert {:ok, _resp} = User.change_password(
-      to_string(user["id"]), @username, @password, @new_change_password)
+      to_string(user["id"]), user["username"], password, @new_password)
   end
 
   test "delete a user", %{user: user} do
     assert {:ok, _resp} = User.delete_user(
-      to_string(user["id"]), @username, @new_change_password)
+      to_string(user["id"]), user["username"], @new_password)
   end
 end

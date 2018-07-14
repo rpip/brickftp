@@ -12,12 +12,13 @@ defmodule BrickFTP.File do
   Upload file.
   For more details, see https://developers.brickftp.com/#file-uploading
   """
+
   def upload(path, source) do
-    FileOperation.Upload.run(path, source)
+    Task.async(fn -> FileOperation.Upload.run(path, source) end)
   end
 
   def upload(path, source, chunk_size) do
-    FileOperation.Upload.run(path, source, chunk_size)
+    Task.async(fn -> FileOperation.Upload.run(path, source, chunk_size) end)
   end
 
   @doc """

@@ -1,23 +1,25 @@
 defmodule BrickFTP.PermissionTest do
   use ExUnit.Case, async: false
 
-  alias BrickFTP.{Permission, Fixture}
+  alias BrickFTP.{Permission, Fixture, User}
 
   setup_all do
-    assert {:ok, user} = Fixture.User.random_user()
+    {user, password} = Fixture.new_user()
 
-    {:ok, user: user}
+    {:ok, user: user, password: password}
   end
 
-  test "list/create/delete notification", %{user: user} do
+  test "list/create/delete permission", %{user: user, password: password} do
     params = %{
-      "path" => "a/b/c/d",
+      "path" => "ab/cd",
       "user_id" => user["id"],
       "permission" => "writeonly"
     }
 
     assert {:ok, _} = Permission.list()
     assert {:ok, perm} = Permission.create(params)
-    assert {:ok, _} = Permission.delete(perm["id"])
+    assert {:ok, _} = Permission.delete(to_string(perm["id"]))
+
+    User.delete_user(to_string(user["id"]), user["username"], password)
   end
 end

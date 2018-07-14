@@ -1,31 +1,31 @@
 defmodule BrickFTP.FileTest do
   use ExUnit.Case, async: false
 
-  @path "sitemap.txt"
-  @newpath "sitemap-2.txt"
+  alias BrickFTP.Fixture
+
+  @copypath "sitemap-copy.txt"
+  @movepath "sitemap-move.txt"
 
   setup_all do
-    data = File.read!("test/fixtures/sitemap.txt")
-
-    assert {:ok, file} = BrickFTP.File.upload(@path, data)
+    assert {:ok, file} = Fixture.new_file()
 
     {:ok, file: file}
   end
 
-  test "download a file" do
-    assert {:ok, _} = BrickFTP.File.download(@path)
+  test "download a file", %{file: file} do
+    assert {:ok, _} = BrickFTP.File.download(file[:path])
   end
 
-  test "copy a file" do
-    assert {:ok, _} = BrickFTP.File.copy(@path, @newpath)
+  test "copy a file", %{file: file} do
+    assert {:ok, _} = BrickFTP.File.copy(file[:path], @copypath)
   end
 
-  test "move a file" do
-    assert {:ok, _} = BrickFTP.File.move(@path, @newpath)
+  test "move a file", %{file: file} do
+    assert {:ok, _} = BrickFTP.File.move(file[:path], @movepath)
   end
 
   test "delete a file" do
-    assert {:ok, _} = BrickFTP.File.delete(@path)
-    assert {:ok, _} = BrickFTP.File.delete(@newpath)
+    assert {:ok, _} = BrickFTP.File.delete(@copypath)
+    assert {:ok, _} = BrickFTP.File.delete(@movepath)
   end
 end

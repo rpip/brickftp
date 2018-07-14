@@ -29,6 +29,7 @@ defmodule BrickFTP do
   BrickFTP_API_KEY=YOUR_API_KEY
   """
 
+  alias BrickFTP.Authentication
   alias BrickFTP.{
     APIError,
     PermissionError,
@@ -157,6 +158,16 @@ defmodule BrickFTP do
     base_url = request_url(endpoint)
     query_params = BrickFTP.Utils.encode(data)
     "#{base_url}?#{query_params}"
+  end
+
+  @doc "Wraps the callback in an authenticated session"
+  def with_session(username, password, callback) do
+    Authentication.login(username, password)
+    response = callback.()
+    Authentication.logout
+
+    # return response
+    response
   end
 
   @doc """

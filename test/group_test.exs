@@ -12,7 +12,7 @@ defmodule BrickFTP.GroupTest do
       "user_ids"=> "3,7,9"
     }
 
-    user = Fixture.User.random_user()
+    user = Fixture.random_user()
 
     # IO.puts user
 
@@ -29,7 +29,7 @@ defmodule BrickFTP.GroupTest do
     assert {:ok, _resp} = Group.create_user_in_group(new_params(), id)
 
     # add a member
-    user = Fixture.User.random_user()
+    user = Fixture.random_user()
     assert {:ok, _resp} = Group.add_member(id, user["id"])
 
     # update a member

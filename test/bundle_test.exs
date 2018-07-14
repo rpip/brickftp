@@ -1,7 +1,7 @@
 defmodule BrickFTP.BundleTest do
   use ExUnit.Case, async: true
 
-  @password "samplePassword"
+  @password "acirfa89"
   @path "backup.zip"
 
   alias BrickFTP.{Bundle, Folder}
