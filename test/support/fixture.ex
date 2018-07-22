@@ -15,8 +15,6 @@ defmodule BrickFTP.Fixture do
 
   def new_file() do
     data = File.read!("test/fixtures/sitemap.txt")
-    # task = BrickFTP.File.upload("#{random_num()}.txt", data)
-    # Task.await(task)
      BrickFTP.FileOperation.Upload.run("#{random_num()}.txt", data)
   end
 

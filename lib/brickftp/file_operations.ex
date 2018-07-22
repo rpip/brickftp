@@ -14,7 +14,10 @@ defmodule BrickFTP.FileOperation do
       end
 
       @doc """
-      Move a file or folder
+      Moves or renames a file or folder to the destination provided in the
+      move-destination parameter in the request body. Note that a move/rename will
+      fail if the destination already exists.
+
       For more details, see https://developers.brickftp.com/#file-and-folder-operations
       """
       def move(src, move_destination) do
@@ -23,7 +26,13 @@ defmodule BrickFTP.FileOperation do
       end
 
       @doc """
-      Delete a file or folder
+      Deletes a file or folder.
+
+      Note that this operation works for both files and folders, but
+      normally it will only work on empty folders. If you want to recursively
+      delete a folder and all its contents, send the request with a Depth header
+      with the value set to infinity.
+
       For more details, see https://developers.brickftp.com/#file-and-folder-operations
       """
       def delete(path) do
@@ -46,7 +55,9 @@ defmodule BrickFTP.FileOperation.Upload do
     request(:post, "#{endpoint()}/#{path}", %{action: :put})
   end
 
-  # Get uploading URL for multi part uploading.
+  @doc """
+  Returns uploading URL for multi part uploading
+  """
   def at(path, part_number, ref) do
     params = %{action: :put, ref: ref, part: part_number}
     request(:post, "#{endpoint()}/#{path}", params)

@@ -183,7 +183,6 @@ defmodule BrickFTP do
   affect the response format.
   """
   def create_headers(opts) do
-    # TODO(yao): refactor to be more functional
     headers =
       case Keyword.has_key?(opts, :session) do
         false ->

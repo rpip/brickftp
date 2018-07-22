@@ -3,8 +3,8 @@ defmodule BrickFTPTest do
   doctest BrickFTP
 
   test "api connection error" do
-    # Application.put_env(:brickftp, :subdomain, "bftpex")
-    # assert {:error, %APIConnectionError{type: "api_connection_error"}} =
+    Application.put_env(:brickftp, :subdomain, "bftpex")
+    assert {:error, %APIConnectionError{type: "api_connection_error"}} =
     # BrickFTP.Bundle.list()
     assert true
   end

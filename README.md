@@ -27,12 +27,14 @@ config :logger, level: :debug
 config :brickftp, api_key: ...
 ```
 
-- Environment value `BRICK_FTP_SUBDOMAIN` is set to `subdomain`.
-- Environment value `BRICK_FTP_API_KEY` is set to `api_key`.
+You can also use environment variables:
+
+- `BRICK_FTP_SUBDOMAIN` to set the `subdomain`.
+- `BRICK_FTP_API_KEY` to set the `api_key`.
 
 ### Authentication
 
-To authenticate by API key, you must set the API key in your conig configuration.
+To authenticate by API key, you must set the API key in your configuration.
 
 Currently, reauthentication is required for the following actions:
 
@@ -44,9 +46,9 @@ Currently, reauthentication is required for the following actions:
 BrickFTP.Authentication.login("username", "password")
 
 # log out
-BrickFTP.Authentication.login()
+BrickFTP.Authentication.logout()
 
-# with_session to wrap API calls
+# or with_session to wrap API calls, which actually does and logout for the API call.
 with_session(username, password, fn -> ... end)
 ```
 
